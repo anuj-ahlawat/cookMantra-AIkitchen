@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ArrowRight, Star, Flame, Clock, Users } from "lucide-react";
 import Image from "next/image";
