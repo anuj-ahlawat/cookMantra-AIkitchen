@@ -18,22 +18,21 @@ export default function PricingSection({ subscriptionTier = "free" }) {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-16">
-        <h2 className="text-5xl md:text-6xl font-bold mb-4">Simple Pricing</h2>
-        <p className="text-xl text-stone-600 font-light">
+        <h2 className="text-5xl md:text-6xl font-bold mb-4 text-[var(--green-dark)]">Simple Pricing</h2>
+        <p className="text-xl text-[var(--green-muted)] font-light">
           Start for free. Upgrade to become a master chef.
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        {/* Free Plan */}
-        <Card className="border-2 border-stone-200 bg-white">
+        <Card className="border-2 border-[var(--border)] bg-[var(--beige-light)] rounded-xl">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold">Sous Chef</CardTitle>
-            <div className="text-5xl font-bold text-stone-900">
+            <CardTitle className="text-3xl font-bold text-[var(--green-dark)]">Sous Chef</CardTitle>
+            <div className="text-5xl font-bold text-[var(--green-dark)]">
               $0
-              <span className="text-lg font-normal text-stone-400">/mo</span>
+              <span className="text-lg font-normal text-[var(--green-muted)]">/mo</span>
             </div>
-            <CardDescription className="text-stone-600 font-light text-base">
+            <CardDescription className="text-[var(--green-muted)] font-light text-base">
               Perfect for casual weekly cooks.
             </CardDescription>
           </CardHeader>
@@ -46,8 +45,8 @@ export default function PricingSection({ subscriptionTier = "free" }) {
                 "Standard support",
                 "Standard Recipes",
               ].map((item, i) => (
-                <li key={i} className="flex gap-3 text-stone-700">
-                  <Check className="h-5 w-5 shrink-0 mt-0.5 text-stone-400" />
+                <li key={i} className="flex gap-3 text-[var(--green-dark)]">
+                  <Check className="h-5 w-5 shrink-0 mt-0.5 text-[var(--green)]" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -58,7 +57,7 @@ export default function PricingSection({ subscriptionTier = "free" }) {
             <Link href="/dashboard" className="w-full">
               <Button
                 variant="outline"
-                className="w-full border-2 border-stone-900 hover:bg-stone-900 hover:text-white"
+                className="w-full border-2 border-[var(--green)] hover:bg-[var(--green)] hover:text-[var(--off-white)]"
               >
                 Get Started
               </Button>
@@ -66,21 +65,20 @@ export default function PricingSection({ subscriptionTier = "free" }) {
           </CardFooter>
         </Card>
 
-        {/* Pro Plan */}
-        <Card className="relative border-2 border-orange-600 bg-orange-50">
-          <Badge className="absolute top-0 right-0 rounded-none rounded-bl-lg bg-orange-600 text-white font-bold uppercase tracking-wide border-none">
+        <Card className="relative border-2 border-[var(--green)] bg-[var(--beige-light)] rounded-xl">
+          <Badge className="absolute top-0 right-0 rounded-none rounded-bl-lg bg-[var(--green)] text-[var(--off-white)] font-bold uppercase tracking-wide border-none">
             MOST POPULAR
           </Badge>
 
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-orange-900">
+            <CardTitle className="text-3xl font-bold text-[var(--green-dark)]">
               Head Chef
             </CardTitle>
-            <div className="text-5xl font-bold text-orange-600">
+            <div className="text-5xl font-bold text-[var(--green)]">
               $7.99
-              <span className="text-lg font-normal text-orange-400">/mo</span>
+              <span className="text-lg font-normal text-[var(--green-muted)]">/mo</span>
             </div>
-            <CardDescription className="text-orange-800/70 font-light text-base">
+            <CardDescription className="text-[var(--green-muted)] font-light text-base">
               For the serious home cook.
             </CardDescription>
           </CardHeader>
@@ -95,9 +93,9 @@ export default function PricingSection({ subscriptionTier = "free" }) {
                 "Chef's Tips & Tricks",
                 "Ingredient Substitutions",
               ].map((item, i) => (
-                <li key={i} className="flex gap-3 text-orange-950">
-                  <Badge className="bg-orange-200 p-1 rounded-full h-6 w-6 flex items-center justify-center border-none">
-                    <Check className="h-4 w-4 text-orange-700" />
+                <li key={i} className="flex gap-3 text-[var(--green-dark)]">
+                  <Badge className="bg-[var(--green)]/20 p-1 rounded-full h-6 w-6 flex items-center justify-center border-none">
+                    <Check className="h-4 w-4 text-[var(--green)]" />
                   </Badge>
                   <span className="font-medium">{item}</span>
                 </li>
@@ -123,7 +121,8 @@ export default function PricingSection({ subscriptionTier = "free" }) {
               >
                 <Button
                   disabled={subscriptionTier === "pro"}
-                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-orange-400 disabled:cursor-not-allowed text-white"
+                  variant="primary"
+                  className="w-full disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {subscriptionTier === "pro" ? "Subscribed" : "Subscribe Now"}
                 </Button>

@@ -3,21 +3,26 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import Header from "@/components/Header";
-import { neobrutalism } from "@clerk/themes";
 import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Servd - AI Recipes Platform",
-  description: "",
+  title: "CookMantra - AI Recipes Platform",
+  description: "Fresh recipes, natural ingredients. Turn leftovers into masterpieces.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider
       appearance={{
-        baseTheme: neobrutalism,
+        variables: {
+          colorPrimary: "#2d6a4f",
+          colorBackground: "#fafaf8",
+          colorInputBackground: "#f5f0e8",
+          colorInputText: "#1b4332",
+          borderRadius: "0.5rem",
+        },
       }}
     >
       <html lang="en" suppressHydrationWarning>
@@ -30,19 +35,19 @@ export default function RootLayout({ children }) {
           <Toaster richColors />
 
           {/* Footer */}
-          <footer className="py-8 px-4 border-t">
+          <footer className="py-8 px-4 border-t border-[var(--border)] bg-[var(--beige-light)]">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="flex items-center gap-3">
                 <Image
                   src="/logo.png"
-                  alt="Servd Logo"
+                  alt="CookMantra Logo"
                   width={48}
                   height={48}
                   className="w-14"
                 />
               </div>
-              <p className="text-stone-500 text-sm">
-                © 2026 Anuj Ahlawat
+              <p className="text-[var(--green-muted)] text-sm">
+                Made with 💚 by RoadsideCoder
               </p>
             </div>
           </footer>

@@ -58,7 +58,7 @@ export default function ImageUploader({ onImageSelect, loading }) {
   // Preview Mode
   if (preview) {
     return (
-      <div className="relative w-full aspect-video bg-stone-100 rounded-2xl overflow-hidden border-2 border-stone-200">
+      <div className="relative w-full aspect-video bg-[var(--beige)] rounded-2xl overflow-hidden border-2 border-[var(--border)]">
         <Image
           src={preview}
           alt="Pantry preview"
@@ -70,7 +70,7 @@ export default function ImageUploader({ onImageSelect, loading }) {
             onClick={clearImage}
             className="absolute top-4 right-4 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all"
           >
-            <X className="w-5 h-5 text-stone-700" />
+            <X className="w-5 h-5 text-[var(--green-dark)]" />
           </button>
         )}
         {loading && (
@@ -89,8 +89,8 @@ export default function ImageUploader({ onImageSelect, loading }) {
         {...getRootProps()}
         className={`relative w-full aspect-square border-2 border-dashed rounded-2xl transition-all cursor-pointer ${
           isDragActive
-            ? "border-orange-600 bg-orange-50 scale-[1.02]"
-            : "border-stone-300 bg-stone-50 hover:border-orange-400 hover:bg-orange-50/50"
+            ? "border-[var(--green)] bg-[var(--beige-light)] scale-[1.02]"
+            : "border-[var(--border)] bg-stone-50 hover:border-[var(--green)]/50 hover:bg-[var(--beige-light)]/50"
         }`}
       >
         <input {...getInputProps()} />
@@ -99,22 +99,22 @@ export default function ImageUploader({ onImageSelect, loading }) {
           {/* Icon */}
           <div
             className={`p-4 rounded-full transition-all ${
-              isDragActive ? "bg-orange-600 scale-110" : "bg-orange-100"
+              isDragActive ? "bg-[var(--green)] scale-110" : "bg-[var(--beige)]"
             }`}
           >
             {isDragActive ? (
               <ImageIcon className="w-8 h-8 text-white" />
             ) : (
-              <Camera className="w-8 h-8 text-orange-600" />
+              <Camera className="w-8 h-8 text-[var(--green)]" />
             )}
           </div>
 
           {/* Text */}
           <div>
-            <h3 className="text-xl font-bold text-stone-900 mb-2">
+            <h3 className="text-xl font-bold text-[var(--green-dark)] mb-2">
               {isDragActive ? "Drop your image here" : "Scan Your Pantry"}
             </h3>
-            <p className="text-stone-600 text-sm max-w-sm">
+            <p className="text-[var(--green-muted)] text-sm max-w-sm">
               {isDragActive
                 ? "Release to upload"
                 : "Take a photo or drag & drop an image of your fridge/pantry"}
@@ -131,7 +131,7 @@ export default function ImageUploader({ onImageSelect, loading }) {
                   e.stopPropagation();
                   fileInputRef.current?.click();
                 }}
-                className="bg-orange-600 hover:bg-orange-700 text-white gap-2"
+                className="bg-[var(--green)] hover:bg-[var(--green-dark)] text-white gap-2"
               >
                 <Camera className="w-4 h-4" />
                 Take Photo
@@ -145,7 +145,7 @@ export default function ImageUploader({ onImageSelect, loading }) {
                   e.stopPropagation();
                   open();
                 }}
-                className="border-orange-200 text-orange-700 hover:bg-orange-50 gap-2"
+                className="border-[var(--border)] text-[var(--green-dark)] hover:bg-[var(--beige-light)] gap-2"
               >
                 <Upload className="w-4 h-4" />
                 Browse Files
@@ -154,7 +154,7 @@ export default function ImageUploader({ onImageSelect, loading }) {
           )}
 
           {/* Helper Text */}
-          <p className="text-xs text-stone-400">
+          <p className="text-xs text-[var(--green-muted)]">
             Supports JPG, PNG, WebP • Max 10MB
           </p>
         </div>

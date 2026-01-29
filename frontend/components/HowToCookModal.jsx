@@ -42,28 +42,27 @@ export default function HowToCookModal() {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <button className="hover:text-orange-600 transition-colors flex items-center gap-1.5 text-sm font-medium text-stone-600">
+        <button className="hover:text-[var(--green)] transition-colors flex items-center gap-1.5 text-sm font-medium text-[var(--green-muted)]">
           <ChefHat className="w-4 h-4" />
           How to Cook?
         </button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg bg-[var(--off-white)] border-[var(--border)]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-2">
-            <ChefHat className="w-6 h-6 text-orange-600" />
+          <DialogTitle className="text-2xl font-serif font-bold flex items-center gap-2 text-[var(--green-dark)]">
+            <ChefHat className="w-6 h-6 text-[var(--green)]" />
             How to Cook?
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-[var(--green-muted)]">
             Enter any recipe name and our AI chef will guide you through the
             cooking process
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-6">
-          {/* Recipe Input */}
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-2">
+            <label className="block text-sm font-medium text-[var(--green-dark)] mb-2">
               What would you like to cook?
             </label>
             <div className="relative">
@@ -72,16 +71,15 @@ export default function HowToCookModal() {
                 value={recipeName}
                 onChange={(e) => setRecipeName(e.target.value)}
                 placeholder="e.g., Chicken Biryani, Chocolate Cake, Pasta Carbonara"
-                className="w-full px-4 py-3 pr-12 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 text-stone-900 placeholder:text-stone-400"
+                className="w-full px-4 py-3 pr-12 border border-[var(--border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--green)] bg-[var(--beige-light)] text-[var(--green-dark)] placeholder:text-[var(--green-muted)]"
                 autoFocus
               />
-              <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+              <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--green-muted)]" />
             </div>
           </div>
 
-          {/* Examples */}
-          <div className="bg-orange-50 rounded-xl p-4 border border-orange-100">
-            <h4 className="text-sm font-semibold text-orange-900 mb-2">
+          <div className="bg-[var(--beige-light)] rounded-xl p-4 border border-[var(--border)]">
+            <h4 className="text-sm font-semibold text-[var(--green-dark)] mb-2">
               💡 Try These:
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -91,7 +89,7 @@ export default function HowToCookModal() {
                     key={example}
                     type="button"
                     onClick={() => setRecipeName(example)}
-                    className="px-3 py-1 bg-white text-orange-700 border border-orange-200 rounded-full text-sm hover:bg-orange-100 transition-colors"
+                    className="px-3 py-1 bg-[var(--off-white)] text-[var(--green)] border border-[var(--green)]/40 rounded-full text-sm hover:bg-[var(--beige)] transition-colors"
                   >
                     {example}
                   </button>
@@ -103,7 +101,8 @@ export default function HowToCookModal() {
           <Button
             type="submit"
             disabled={!recipeName.trim()}
-            className="flex-1 w-full bg-orange-600 hover:bg-orange-700 text-white h-12"
+            variant="primary"
+            className="flex-1 w-full h-12"
           >
             <ChefHat className="w-5 h-5 mr-2" />
             Get Recipe
