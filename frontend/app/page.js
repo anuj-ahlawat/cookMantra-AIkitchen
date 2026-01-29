@@ -203,7 +203,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 px-4 scroll-mt-24">
+      <section className="py-24 px-4">
         <PricingSection subscriptionTier={subscriptionTier} />
       </section>
     </div>

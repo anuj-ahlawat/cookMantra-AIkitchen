@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import Header from "@/components/Header";
 import Image from "next/image";
+import { neobrutalism } from "@clerk/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,16 +15,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider
-      appearance={{
-        variables: {
-          colorPrimary: "#2d6a4f",
-          colorBackground: "#fafaf8",
-          colorInputBackground: "#f5f0e8",
-          colorInputText: "#1b4332",
-          borderRadius: "0.5rem",
-        },
-      }}
+    <ClerkProvider appearance={{baseTheme : neobrutalism}}
     >
       <html lang="en" suppressHydrationWarning>
         <head>
