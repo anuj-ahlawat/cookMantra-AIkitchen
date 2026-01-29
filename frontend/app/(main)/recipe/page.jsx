@@ -124,7 +124,7 @@ function RecipeContent() {
   // No recipe name in URL
   if (!recipeName) {
     return (
-      <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+      <div className="min-h-screen pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-4xl text-center py-20">
           <div className="bg-[var(--beige-light)] w-20 h-20 border-2 border-[var(--border)] flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-[var(--green)]" />
@@ -148,7 +148,7 @@ function RecipeContent() {
   // Loading state
   if (loadingRecipe === null || loadingRecipe) {
     return (
-      <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+      <div className="min-h-screen pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center py-20">
             <ClockLoader className="mx-auto mb-6" color="#dc6300" />
@@ -178,7 +178,7 @@ function RecipeContent() {
   // Error state
   if (loadingRecipe === false && !recipe) {
     return (
-      <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+      <div className="min-h-screen pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-4xl text-center py-20">
           <div className="bg-red-50 w-20 h-20 border-2 border-red-200 flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-red-600" />
@@ -212,7 +212,7 @@ function RecipeContent() {
 
   // Main recipe view
   return (
-    <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+    <div className="min-h-screen pt-24 pb-16 px-4">
       <div className="container mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-8">
@@ -594,7 +594,7 @@ export default function RecipePage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+        <div className="min-h-screen pt-24 pb-16 px-4">
           <div className="container mx-auto max-w-4xl text-center py-20">
             <Loader2 className="w-16 h-16 text-[var(--green)] animate-spin mx-auto mb-6" />
             <p className="text-[var(--green-muted)]">Loading recipe...</p>

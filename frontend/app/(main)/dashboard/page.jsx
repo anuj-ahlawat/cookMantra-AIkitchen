@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   const areas = areasData?.areas || [];
 
   return (
-    <div className="min-h-screen bg-[var(--off-white)] py-16 px-4">
+    <div className="min-h-screen py-16 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="mb-5">
           <h1 className="text-5xl md:text-7xl font-bold text-[var(--green-dark)] mb-4 tracking-tight leading-tight">
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
             <div className="flex flex-col md:flex-row items-start gap-6 mb-6">
               <Badge
                 variant="outline"
-                className="border-2 border-[var(--green)] text-[var(--green)] bg-[var(--beige-light)] font-bold uppercase tracking-wide w-fit"
+                className="border-2 border-[var(--green)] text-[var(--green)] bg-[var(--beige-light)] font-bold uppercase tracking-wide w-fit shadow-cookmantra"
               >
                 <Flame className="mr-1 w-4 h-4" />
                 Today&apos;s Special
@@ -50,9 +50,9 @@ export default async function DashboardPage() {
                 recipeOfTheDay.strMeal
               )}`}
             >
-              <div className="relative bg-[var(--off-white)] border-2 border-[var(--border)] overflow-hidden hover:border-[var(--green)]/50 hover:shadow-lg transition-all duration-300 group cursor-pointer rounded-xl">
+              <div className="relative bg-[var(--off-white)] border border-[var(--border)] overflow-hidden hover:border-[var(--green)]/40 hover:shadow-cookmantra-lg transition-all duration-300 group cursor-pointer rounded-3xl shadow-cookmantra">
                 <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative aspect-4/3 md:aspect-auto border-b-2 md:border-b-0 md:border-r-2 border-[var(--border)]">
+                  <div className="relative aspect-4/3 md:aspect-auto border-b md:border-b-0 md:border-r border-[var(--border)] rounded-tl-3xl md:rounded-l-3xl overflow-hidden">
                     <Image
                       src={recipeOfTheDay.strMealThumb}
                       alt={recipeOfTheDay.strMeal}
@@ -129,7 +129,7 @@ export default async function DashboardPage() {
                 key={category.strCategory}
                 href={`/recipes/category/${category.strCategory.toLowerCase()}`}
               >
-                <div className="bg-[var(--beige-light)] p-6 border-2 border-[var(--border)] hover:border-[var(--green)]/50 hover:shadow-lg transition-all text-center group cursor-pointer rounded-xl">
+                <div className="bg-[var(--off-white)] p-6 border border-[var(--border)] hover:border-[var(--green)]/40 hover:shadow-cookmantra transition-all text-center group cursor-pointer rounded-2xl">
                   <div className="text-4xl mb-3">
                     {getCategoryEmoji(category.strCategory)}
                   </div>
@@ -160,7 +160,7 @@ export default async function DashboardPage() {
                   .toLowerCase()
                   .replace(/\s+/g, "-")}`}
               >
-                <div className="bg-[var(--beige-light)] p-5 border-2 border-[var(--border)] hover:border-[var(--green)]/50 hover:shadow-lg transition-all group cursor-pointer rounded-xl">
+                <div className="bg-[var(--off-white)] p-5 border border-[var(--border)] hover:border-[var(--green)]/40 hover:shadow-cookmantra transition-all group cursor-pointer rounded-2xl">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl">
                       {getCountryFlag(area.strArea)}

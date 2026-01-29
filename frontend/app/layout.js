@@ -27,19 +27,19 @@ export default function RootLayout({ children }) {
     >
       <html lang="en" suppressHydrationWarning>
         <head>
-          <link rel="icon" href="/logo.png" sizes="any" />
+          <link rel="icon" href="/logo.svg" sizes="any" />
         </head>
         <body className={`${inter.className}`}>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen page-bg">{children}</main>
           <Toaster richColors />
 
           {/* Footer */}
-          <footer className="py-8 px-4 border-t border-[var(--border)] bg-[var(--beige-light)]">
+          <footer className="py-8 px-4 border-t border-[var(--border)] bg-[var(--page-bg)]">
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="flex items-center gap-3">
                 <Image
-                  src="/logo.png"
+                  src="/logo.svg"
                   alt="CookMantra Logo"
                   width={48}
                   height={48}
@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
                 />
               </div>
               <p className="text-[var(--green-muted)] text-sm">
-                Made with 💚 by RoadsideCoder
+              © 2026 CookMantra. All Rights Reserved.
               </p>
             </div>
           </footer>

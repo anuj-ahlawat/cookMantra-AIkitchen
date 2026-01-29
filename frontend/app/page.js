@@ -15,7 +15,7 @@ export default async function LandingPage() {
   const subscriptionTier = has({ plan: "pro" }) ? "pro" : "free";
 
   return (
-    <div className="min-h-screen bg-[var(--off-white)] text-[var(--green-dark)]">
+    <div className="min-h-screen text-[var(--green-dark)]">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto">
@@ -59,7 +59,7 @@ export default async function LandingPage() {
               </p>
             </div>
 
-            <Card className="relative aspect-square md:aspect-4/5 border-2 border-[var(--border)] bg-[var(--beige-light)] overflow-hidden py-0 rounded-xl">
+            <Card className="relative aspect-square md:aspect-4/5 border border-[var(--border)] bg-[var(--off-white)] overflow-hidden py-0 rounded-3xl shadow-cookmantra">
               <Image
                 src="/pasta-dish.png"
                 alt="Delicious pasta dish"
@@ -68,7 +68,7 @@ export default async function LandingPage() {
                 className="w-full h-full object-cover"
               />
 
-              <Card className="absolute bottom-8 left-8 right-8 bg-[var(--off-white)]/95 backdrop-blur-sm border-2 border-[var(--border)] py-0 rounded-xl shadow-lg">
+              <Card className="absolute bottom-8 left-8 right-8 bg-[var(--off-white)]/95 backdrop-blur-sm border border-[var(--border)] py-0 rounded-2xl shadow-cookmantra-lg">
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <div>
@@ -107,7 +107,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Stats Bar */}
-      <section className="py-12 border-y-2 border-[var(--border)] bg-[var(--green)]">
+      <section className="py-12 border-y border-[var(--border)] bg-[var(--green)]">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center px-4">
           {SITE_STATS.map((stat, i) => (
             <div key={i}>
@@ -126,7 +126,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Features */}
-      <section className="py-24 px-4 bg-[var(--off-white)]">
+      <section className="py-24 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
             <h2 className="text-5xl md:text-6xl font-bold mb-4 text-[var(--green-dark)]">
@@ -143,7 +143,7 @@ export default async function LandingPage() {
               return (
                 <Card
                   key={index}
-                  className="border-2 border-[var(--border)] bg-[var(--beige-light)] hover:border-[var(--green)]/50 hover:shadow-lg transition-all group py-0 rounded-xl"
+                  className="border border-[var(--border)] bg-[var(--off-white)] hover:border-[var(--green)]/40 hover:shadow-cookmantra transition-all group py-0 rounded-2xl"
                 >
                   <CardContent className="p-8">
                     <div className="flex justify-between items-start mb-6">
@@ -170,7 +170,7 @@ export default async function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-4 border-y-2 border-[var(--border)] bg-[var(--green)] text-[var(--off-white)]">
+      <section className="py-24 px-4 border-y border-[var(--border)] bg-[var(--green)] text-[var(--off-white)]">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-5xl md:text-6xl font-bold mb-16">
             Cook in 3 Steps
@@ -203,7 +203,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="py-24 px-4 bg-[var(--off-white)]">
+      <section id="pricing" className="py-24 px-4 scroll-mt-24">
         <PricingSection subscriptionTier={subscriptionTier} />
       </section>
     </div>

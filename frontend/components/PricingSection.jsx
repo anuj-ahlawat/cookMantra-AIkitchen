@@ -25,9 +25,9 @@ export default function PricingSection({ subscriptionTier = "free" }) {
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <Card className="border-2 border-[var(--border)] bg-[var(--beige-light)] rounded-xl">
+        <Card className="border border-[var(--border)] bg-[var(--off-white)] rounded-2xl shadow-cookmantra">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-[var(--green-dark)]">Sous Chef</CardTitle>
+            <CardTitle className="text-3xl font-bold text-[var(--green-dark)]">FREE</CardTitle>
             <div className="text-5xl font-bold text-[var(--green-dark)]">
               $0
               <span className="text-lg font-normal text-[var(--green-muted)]">/mo</span>
@@ -65,14 +65,14 @@ export default function PricingSection({ subscriptionTier = "free" }) {
           </CardFooter>
         </Card>
 
-        <Card className="relative border-2 border-[var(--green)] bg-[var(--beige-light)] rounded-xl">
+        <Card className="relative border-2 border-[var(--green)] bg-[var(--off-white)] rounded-2xl shadow-cookmantra-lg">
           <Badge className="absolute top-0 right-0 rounded-none rounded-bl-lg bg-[var(--green)] text-[var(--off-white)] font-bold uppercase tracking-wide border-none">
             MOST POPULAR
           </Badge>
 
           <CardHeader>
             <CardTitle className="text-3xl font-bold text-[var(--green-dark)]">
-              Head Chef
+              PRO
             </CardTitle>
             <div className="text-5xl font-bold text-[var(--green)]">
               $7.99

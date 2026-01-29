@@ -68,7 +68,7 @@ export default function RecipeCard({ recipe, variant = "default" }) {
   if (variant === "grid") {
     return (
       <Link href={data.href}>
-        <Card className="rounded-xl overflow-hidden border-[var(--border)] bg-card hover:shadow-xl hover:-translate-y-1 hover:border-[var(--green)]/30 transition-all duration-300 cursor-pointer group pt-0">
+        <Card className="rounded-2xl overflow-hidden border border-[var(--border)] bg-[var(--off-white)] hover:shadow-cookmantra-lg hover:-translate-y-0.5 hover:border-[var(--green)]/40 transition-all duration-300 cursor-pointer group pt-0">
           {data.showImage ? (
             <div className="relative aspect-square">
               <Image
@@ -106,7 +106,7 @@ export default function RecipeCard({ recipe, variant = "default" }) {
   // Variant: pantry (for AI-generated suggestions with match percentage)
   if (variant === "pantry") {
     return (
-      <Card className="rounded-xl border-[var(--border)] bg-card hover:shadow-xl hover:-translate-y-1 hover:border-[var(--green)]/30 transition-all duration-300 overflow-hidden">
+      <Card className="rounded-2xl border border-[var(--border)] bg-[var(--off-white)] hover:shadow-cookmantra hover:-translate-y-0.5 hover:border-[var(--green)]/40 transition-all duration-300 overflow-hidden">
         {data.showImage && (
           <div className="relative aspect-video">
             <Image
@@ -243,7 +243,7 @@ export default function RecipeCard({ recipe, variant = "default" }) {
   if (variant === "list") {
     return (
       <Link href={data.href}>
-        <Card className="rounded-xl border-[var(--border)] bg-card hover:shadow-lg hover:border-[var(--green)]/30 transition-all cursor-pointer group overflow-hidden py-0">
+        <Card className="rounded-2xl border border-[var(--border)] bg-[var(--off-white)] hover:shadow-cookmantra hover:border-[var(--green)]/40 transition-all cursor-pointer group overflow-hidden py-0">
           <div className="flex flex-col md:flex-row">
             {data.showImage ? (
               <div className="relative w-full md:w-48 aspect-video md:aspect-square flex-shrink-0">
@@ -324,7 +324,7 @@ export default function RecipeCard({ recipe, variant = "default" }) {
 
   return (
     <Link href={data.href}>
-      <Card className="rounded-xl border-[var(--border)] bg-card hover:shadow-lg hover:border-[var(--green)]/30 transition-all cursor-pointer overflow-hidden py-0">
+      <Card className="rounded-2xl border border-[var(--border)] bg-[var(--off-white)] hover:shadow-cookmantra hover:border-[var(--green)]/40 transition-all cursor-pointer overflow-hidden py-0">
         {data.showImage && (
           <div className="relative aspect-video">
             <Image

@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { Refrigerator, Cookie } from "lucide-react";
+import { Refrigerator, Cookie, CreditCard } from "lucide-react";
 import React from "react";
 
 const UserDropdown = () => {

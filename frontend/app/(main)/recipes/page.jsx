@@ -22,7 +22,7 @@ export default function SavedRecipesPage() {
   const recipes = recipesData?.recipes || [];
 
   return (
-    <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+    <div className="min-h-screen pt-24 pb-16 px-4">
       <div className="container mx-auto max-w-7xl">
         <div className="flex items-center gap-1 mb-8">
           <Bookmark className="w-25 h-25 text-[var(--green)]" />

@@ -26,7 +26,7 @@ export default function RecipeGrid({
   const displayName = value?.replace(/-/g, " "); // Convert "saudi-arabian" to "saudi arabian"
 
   return (
-    <div className="min-h-screen bg-[var(--off-white)] pt-14 pb-16 px-4">
+    <div className="min-h-screen pt-14 pb-16 px-4">
       <div className="container mx-auto max-w-7xl">
         <div className="mb-8">
           <Link

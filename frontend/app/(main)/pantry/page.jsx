@@ -119,7 +119,7 @@ export default function PantryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--off-white)] pt-24 pb-16 px-4">
+    <div className="min-h-screen pt-24 pb-16 px-4">
       <div className="container mx-auto max-w-5xl">
         <div className="mb-4">
           <div className="flex items-center justify-between mb-6">

@@ -14,14 +14,14 @@ export default async function Header() {
   const user = await checkUser();
 
   return (
-    <header className="fixed top-0 w-full border-b border-[var(--border)] bg-[var(--off-white)]/90 backdrop-blur-md z-50 supports-backdrop-filter:bg-[var(--off-white)]/80">
+    <header className="fixed top-0 w-full border-b border-[var(--border)] bg-[var(--page-bg)]/95 backdrop-blur-md z-50 supports-backdrop-filter:bg-[var(--page-bg)]/90">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link
           href={user ? "/dashboard" : "/"}
           className="flex items-center gap-2 group"
         >
           <Image
-            src="/orange-logo.png"
+            src="/logo.svg"
             alt="CookMantra Logo"
             width={60}
             height={60}

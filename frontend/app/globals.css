@@ -58,6 +58,12 @@
   --green-dark: #1b4332;
   --green-muted: #6b7c6f;
 
+  /* Unique page background: warm tint with subtle green undertone */
+  --page-bg: #f4f2ec;
+  --page-bg-pattern: radial-gradient(circle at 20% 30%, rgba(45, 106, 79, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(212, 196, 176, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(245, 240, 232, 0.5) 0%, transparent 70%);
+
   --background: var(--off-white);
   --foreground: var(--green-dark);
   --card: var(--beige-light);
@@ -151,4 +157,20 @@
 
 .animate-slow-fill {
   animation: slow-fill 10s ease-out forwards;
+}
+
+/* CookMantra page wrapper: warm background + subtle organic pattern */
+.page-bg {
+  background-color: var(--page-bg);
+  background-image: var(--page-bg-pattern);
+  background-attachment: fixed;
+}
+
+/* Soft brand shadow for cards (green tint) */
+.shadow-cookmantra {
+  box-shadow: 0 4px 6px -1px rgba(27, 67, 50, 0.06), 0 10px 20px -5px rgba(27, 67, 50, 0.08);
+}
+
+.shadow-cookmantra-lg {
+  box-shadow: 0 10px 25px -5px rgba(27, 67, 50, 0.08), 0 20px 40px -10px rgba(27, 67, 50, 0.1);
 }
