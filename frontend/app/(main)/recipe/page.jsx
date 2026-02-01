@@ -84,6 +84,8 @@ function RecipeContent() {
       } else {
         toast.success("New recipe generated and saved!");
       }
+    } else if (recipeData?.success === false && recipeData?.error) {
+      toast.error(recipeData.error);
     }
   }, [recipeData]);
 
@@ -172,8 +174,6 @@ function RecipeContent() {
       </div>
     );
   }
-
-  console.log(recipe, recipeData);
 
   // Error state
   if (loadingRecipe === false && !recipe) {

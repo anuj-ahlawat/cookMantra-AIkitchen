@@ -1,7 +1,9 @@
 "use server";
 
 import { checkUser } from "@/lib/checkUser";
-import { getApiBase } from "@/lib/api-helpers";
+import { getApiBase } from "@/lib/api-helpers.js";
+import { toRecipe } from "@/lib/api-helpers.js";
+import { pool } from "@/lib/db";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -64,12 +66,12 @@ export async function getOrGenerateRecipe(formData) {
   try {
     const user = await checkUser();
     if (!user) {
-      throw new Error("User not authenticated");
+      return { success: false, error: "User not authenticated" };
     }
 
     const recipeName = formData.get("recipeName");
     if (!recipeName) {
-      throw new Error("Recipe name is required");
+      return { success: false, error: "Recipe name is required" };
     }
 
     // Normalize the title (e.g., "apple cake" → "Apple Cake")
@@ -78,43 +80,33 @@ export async function getOrGenerateRecipe(formData) {
 
     const isPro = user.subscriptionTier === "pro";
 
-    const base = getApiBase();
-    // Step 1: Check if recipe already exists in DB (case-insensitive search)
-    const searchResponse = await fetch(
-      `${base}/api/recipes?filters[title][$eqi]=${encodeURIComponent(
-        normalizedTitle
-      )}&populate=*`,
-      { cache: "no-store" }
+    // Step 1: Check if recipe already exists in DB (direct query, no fetch)
+    const searchResult = await pool.query(
+      `SELECT * FROM app_recipes WHERE LOWER(title) = LOWER($1) ORDER BY id DESC LIMIT 1`,
+      [normalizedTitle]
     );
 
-    if (searchResponse.ok) {
-      const searchData = await searchResponse.json();
+    if (searchResult.rows.length > 0) {
+      const row = searchResult.rows[0];
+      const recipeData = toRecipe(row);
+      console.log("✅ Recipe found in database:", recipeData.id);
 
-      if (searchData.data && searchData.data.length > 0) {
-        console.log("✅ Recipe found in database:", searchData.data[0].id);
+      // Check if user has saved this recipe
+      const savedResult = await pool.query(
+        `SELECT id FROM app_saved_recipes WHERE user_id = $1 AND recipe_id = $2 LIMIT 1`,
+        [user.id, recipeData.id]
+      );
+      const isSaved = savedResult.rows.length > 0;
 
-        // Check if user has saved this recipe
-        const savedRecipeResponse = await fetch(
-          `${base}/api/saved-recipes?filters[user][id][$eq]=${user.id}&filters[recipe][id][$eq]=${searchData.data[0].id}`,
-          { cache: "no-store" }
-        );
-
-        let isSaved = false;
-        if (savedRecipeResponse.ok) {
-          const savedData = await savedRecipeResponse.json();
-          isSaved = savedData.data && savedData.data.length > 0;
-        }
-
-        return {
-          success: true,
-          recipe: searchData.data[0],
-          recipeId: searchData.data[0].id,
-          isSaved: isSaved,
-          fromDatabase: true,
-          isPro,
-          message: "Recipe loaded from database",
-        };
-      }
+      return {
+        success: true,
+        recipe: recipeData,
+        recipeId: recipeData.id,
+        isSaved,
+        fromDatabase: true,
+        isPro,
+        message: "Recipe loaded from database",
+      };
     }
 
     // Step 2: Recipe doesn't exist, generate with Gemini
@@ -284,20 +276,32 @@ Guidelines:
       normalizedTitle
     );
 
-    const createRecipeResponse = await fetch(`${base}/api/recipes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(recipePayload),
-    });
+    const insertResult = await pool.query(
+      `INSERT INTO app_recipes (title, description, cuisine, category, ingredients, instructions, image_url, is_public, author_id, prep_time, cook_time, servings, nutrition, tips, substitutions)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+       RETURNING *`,
+      [
+        normalizedTitle,
+        recipePayload.data.description || null,
+        recipePayload.data.cuisine || null,
+        recipePayload.data.category || null,
+        JSON.stringify(recipePayload.data.ingredients || []),
+        JSON.stringify(recipePayload.data.instructions || []),
+        recipePayload.data.imageUrl || "",
+        recipePayload.data.isPublic ?? true,
+        recipePayload.data.author || null,
+        recipePayload.data.prepTime ?? null,
+        recipePayload.data.cookTime ?? null,
+        recipePayload.data.servings ?? null,
+        recipePayload.data.nutrition ? JSON.stringify(recipePayload.data.nutrition) : null,
+        recipePayload.data.tips ? JSON.stringify(recipePayload.data.tips) : null,
+        recipePayload.data.substitutions ? JSON.stringify(recipePayload.data.substitutions) : null,
+      ]
+    );
 
-    if (!createRecipeResponse.ok) {
-      const errorText = await createRecipeResponse.text();
-      console.error("❌ Failed to save recipe:", errorText);
-      throw new Error("Failed to save recipe to database");
-    }
-
-    const createdRecipe = await createRecipeResponse.json();
-    console.log("✅ Recipe saved to database:", createdRecipe.data.id);
+    const createdRow = insertResult.rows[0];
+    const createdRecipeData = toRecipe(createdRow);
+    console.log("✅ Recipe saved to database:", createdRecipeData.id);
 
     return {
       success: true,
@@ -308,7 +312,7 @@ Guidelines:
         cuisine,
         imageUrl: imageUrl || "",
       },
-      recipeId: createdRecipe.data.id,
+      recipeId: createdRecipeData.id,
       isSaved: false,
       fromDatabase: false,
       recommendationsLimit: isPro ? "unlimited" : 5,
@@ -317,7 +321,10 @@ Guidelines:
     };
   } catch (error) {
     console.error("❌ Error in getOrGenerateRecipe:", error);
-    throw new Error(error.message || "Failed to load recipe");
+    return {
+      success: false,
+      error: error.message || "Failed to load recipe",
+    };
   }
 }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { parseFiltersSimple } from "@/lib/api-helpers";
+import { parseFiltersSimple } from "@/lib/api-helpers.js";
 import { pool } from "@/lib/db";
 
 export async function GET(request) {

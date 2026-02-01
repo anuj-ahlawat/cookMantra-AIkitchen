@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { toPantryItem } from "@/lib/api-helpers";
+import { toPantryItem } from "@/lib/api-helpers.js";
 import { pool } from "@/lib/db";
 
 export async function PUT(request, { params }) {
