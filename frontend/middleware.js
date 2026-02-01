@@ -1,5 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   "/recipe(.*)",
@@ -8,16 +7,19 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-
-  if (!userId && isProtectedRoute(req)) {
-    const { redirectToSignIn } = await auth();
-    return redirectToSignIn();
-  }
-
-  return NextResponse.next();
-});
+// Dynamic domain so Clerk cookies/session work on production (Vercel) and localhost
+export default clerkMiddleware(
+  async (auth, req) => {
+    if (isProtectedRoute(req)) {
+      await auth.protect();
+    }
+  },
+  (req) => ({
+    signInUrl: "/sign-in",
+    signUpUrl: "/sign-up",
+    domain: req.nextUrl.host,
+  })
+);
 
 export const config = {
   matcher: [
