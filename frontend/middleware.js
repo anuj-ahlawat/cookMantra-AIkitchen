@@ -7,18 +7,23 @@ const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
 ]);
 
-// Dynamic domain so Clerk cookies/session work on production (Vercel) and localhost
+// Dynamic domain + authorizedParties so Clerk session works on production (Vercel) and localhost
 export default clerkMiddleware(
   async (auth, req) => {
     if (isProtectedRoute(req)) {
       await auth.protect();
     }
   },
-  (req) => ({
-    signInUrl: "/sign-in",
-    signUpUrl: "/sign-up",
-    domain: req.nextUrl.host,
-  })
+  (req) => {
+    const origin = req.nextUrl.origin;
+    return {
+      signInUrl: "/sign-in",
+      signUpUrl: "/sign-up",
+      domain: req.nextUrl.host,
+      // Allow this origin so Server Actions receive the session (fixes "User not authenticated" on Vercel)
+      authorizedParties: [origin],
+    };
+  }
 );
 
 export const config = {
