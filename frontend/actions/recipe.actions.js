@@ -1,7 +1,6 @@
 "use server";
 
 import { checkUser } from "@/lib/checkUser";
-import { getApiBase } from "@/lib/api-helpers.js";
 import { toRecipe } from "@/lib/api-helpers.js";
 import { pool } from "@/lib/db";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -328,115 +327,102 @@ Guidelines:
   }
 }
 
-// Save recipe to user's collection (bookmark)
+// Save recipe to user's collection (bookmark) — uses DB directly for localhost + Vercel
 export async function saveRecipeToCollection(formData) {
   try {
     const user = await checkUser();
     if (!user) {
-      throw new Error("User not authenticated");
+      return { success: false, error: "User not authenticated" };
     }
 
     const recipeId = formData.get("recipeId");
     if (!recipeId) {
-      throw new Error("Recipe ID is required");
+      return { success: false, error: "Recipe ID is required" };
     }
 
-    // Check if already saved
-    const base = getApiBase();
-    const existingResponse = await fetch(
-      `${base}/api/saved-recipes?filters[user][id][$eq]=${user.id}&filters[recipe][id][$eq]=${recipeId}`,
-      { cache: "no-store" }
+    const recipeIdNum = parseInt(recipeId, 10);
+    if (isNaN(recipeIdNum)) {
+      return { success: false, error: "Invalid recipe ID" };
+    }
+
+    // Check if already saved (direct DB)
+    const existing = await pool.query(
+      `SELECT id FROM app_saved_recipes WHERE user_id = $1 AND recipe_id = $2 LIMIT 1`,
+      [user.id, recipeIdNum]
     );
 
-    if (existingResponse.ok) {
-      const existingData = await existingResponse.json();
-      if (existingData.data && existingData.data.length > 0) {
-        return {
-          success: true,
-          alreadySaved: true,
-          message: "Recipe is already in your collection",
-        };
-      }
+    if (existing.rows.length > 0) {
+      return {
+        success: true,
+        alreadySaved: true,
+        message: "Recipe is already in your collection",
+      };
     }
 
-    // Create saved recipe relation
-    const saveResponse = await fetch(`${base}/api/saved-recipes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: {
-          user: user.id,
-          recipe: recipeId,
-          savedAt: new Date().toISOString(),
-        },
-      }),
-    });
+    // Insert saved recipe (direct DB)
+    const insertResult = await pool.query(
+      `INSERT INTO app_saved_recipes (user_id, recipe_id, saved_at) VALUES ($1, $2, $3)
+       ON CONFLICT (user_id, recipe_id) DO NOTHING
+       RETURNING id, user_id AS "user", recipe_id AS "recipe", saved_at AS "savedAt"`,
+      [user.id, recipeIdNum, new Date()]
+    );
 
-    if (!saveResponse.ok) {
-      const errorText = await saveResponse.text();
-      console.error("❌ Failed to save recipe:", errorText);
-      throw new Error("Failed to save recipe to collection");
+    if (insertResult.rows.length === 0) {
+      return {
+        success: true,
+        alreadySaved: true,
+        message: "Recipe is already in your collection",
+      };
     }
 
-    const savedRecipe = await saveResponse.json();
-    console.log("✅ Recipe saved to user collection:", savedRecipe.data.id);
+    const savedRecipe = insertResult.rows[0];
+    console.log("✅ Recipe saved to user collection:", savedRecipe.id);
 
     return {
       success: true,
       alreadySaved: false,
-      savedRecipe: savedRecipe.data,
+      savedRecipe,
       message: "Recipe saved to your collection!",
     };
   } catch (error) {
     console.error("❌ Error saving recipe to collection:", error);
-    throw new Error(error.message || "Failed to save recipe");
+    return { success: false, error: error.message || "Failed to save recipe to collection" };
   }
 }
 
-// Remove recipe from user's collection (unbookmark)
+// Remove recipe from user's collection (unbookmark) — uses DB directly
 export async function removeRecipeFromCollection(formData) {
   try {
     const user = await checkUser();
     if (!user) {
-      throw new Error("User not authenticated");
+      return { success: false, error: "User not authenticated" };
     }
 
     const recipeId = formData.get("recipeId");
     if (!recipeId) {
-      throw new Error("Recipe ID is required");
+      return { success: false, error: "Recipe ID is required" };
     }
 
-    // Find saved recipe relation
-    const base = getApiBase();
-    const searchResponse = await fetch(
-      `${base}/api/saved-recipes?filters[user][id][$eq]=${user.id}&filters[recipe][id][$eq]=${recipeId}`,
-      { cache: "no-store" }
+    const recipeIdNum = parseInt(recipeId, 10);
+    if (isNaN(recipeIdNum)) {
+      return { success: false, error: "Invalid recipe ID" };
+    }
+
+    const searchResult = await pool.query(
+      `SELECT id FROM app_saved_recipes WHERE user_id = $1 AND recipe_id = $2 LIMIT 1`,
+      [user.id, recipeIdNum]
     );
 
-    if (!searchResponse.ok) {
-      throw new Error("Failed to find saved recipe");
-    }
-
-    const searchData = await searchResponse.json();
-
-    if (!searchData.data || searchData.data.length === 0) {
+    if (searchResult.rows.length === 0) {
       return {
         success: true,
         message: "Recipe was not in your collection",
       };
     }
 
-    // Delete saved recipe relation
-    const savedRecipeId = searchData.data[0].id;
-    const deleteResponse = await fetch(
-      `${base}/api/saved-recipes/${savedRecipeId}`,
-      { method: "DELETE" }
-    );
-
-    if (!deleteResponse.ok) {
-      throw new Error("Failed to remove recipe from collection");
-    }
-
+    await pool.query("DELETE FROM app_saved_recipes WHERE id = $1", [
+      searchResult.rows[0].id,
+    ]);
     console.log("✅ Recipe removed from user collection");
 
     return {
@@ -445,41 +431,33 @@ export async function removeRecipeFromCollection(formData) {
     };
   } catch (error) {
     console.error("❌ Error removing recipe from collection:", error);
-    throw new Error(error.message || "Failed to remove recipe");
+    return { success: false, error: error.message || "Failed to remove recipe" };
   }
 }
 
-// Get recipes based on pantry ingredients
+// Get recipes based on pantry ingredients — uses DB directly
 export async function getRecipesByPantryIngredients() {
   try {
     const user = await checkUser();
     if (!user) {
-      throw new Error("User not authenticated");
+      return { success: false, error: "User not authenticated" };
     }
 
     const isPro = user.subscriptionTier === "pro";
 
-    // Get user's pantry items
-    const base = getApiBase();
-    const pantryResponse = await fetch(
-      `${base}/api/pantry-items?filters[owner][id][$eq]=${user.id}`,
-      { cache: "no-store" }
+    const pantryResult = await pool.query(
+      `SELECT * FROM app_pantry_items WHERE owner_id = $1 ORDER BY created_at DESC`,
+      [user.id]
     );
 
-    if (!pantryResponse.ok) {
-      throw new Error("Failed to fetch pantry items");
-    }
-
-    const pantryData = await pantryResponse.json();
-
-    if (!pantryData.data || pantryData.data.length === 0) {
+    if (!pantryResult.rows.length) {
       return {
         success: false,
         message: "Your pantry is empty. Add ingredients first!",
       };
     }
 
-    const ingredients = pantryData.data.map((item) => item.name).join(", ");
+    const ingredients = pantryResult.rows.map((r) => r.name).join(", ");
 
     console.log("🥘 Finding recipes for ingredients:", ingredients);
 
@@ -539,35 +517,52 @@ Rules:
     };
   } catch (error) {
     console.error("❌ Error in getRecipesByPantryIngredients:", error);
-    throw new Error(error.message || "Failed to get recipe suggestions");
+    return { success: false, error: error.message || "Failed to get recipe suggestions" };
   }
 }
 
-// Get user's saved recipes
+// Get user's saved recipes — uses DB directly
 export async function getSavedRecipes() {
   try {
     const user = await checkUser();
     if (!user) {
-      throw new Error("User not authenticated");
+      return { success: false, error: "User not authenticated" };
     }
 
-    // Fetch saved recipes with populated recipe data
-    const base = getApiBase();
-    const response = await fetch(
-      `${base}/api/saved-recipes?filters[user][id][$eq]=${user.id}&populate[recipe][populate]=*&sort=savedAt:desc`,
-      { cache: "no-store" }
+    const result = await pool.query(
+      `SELECT sr.id, sr.saved_at,
+              r.id AS r_id, r.title, r.description, r.cuisine, r.category, r.ingredients, r.instructions,
+              r.image_url, r.is_public, r.author_id, r.prep_time, r.cook_time, r.servings,
+              r.nutrition, r.tips, r.substitutions, r.created_at, r.updated_at
+       FROM app_saved_recipes sr
+       JOIN app_recipes r ON r.id = sr.recipe_id
+       WHERE sr.user_id = $1
+       ORDER BY sr.saved_at DESC`,
+      [user.id]
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch saved recipes");
-    }
-
-    const data = await response.json();
-
-    // Extract recipes from saved-recipes relations
-    const recipes = data.data
-      .map((savedRecipe) => savedRecipe.recipe)
-      .filter(Boolean); // Remove any null recipes
+    const recipes = result.rows.map((r) =>
+      toRecipe({
+        id: r.r_id,
+        title: r.title,
+        description: r.description,
+        cuisine: r.cuisine,
+        category: r.category,
+        ingredients: r.ingredients,
+        instructions: r.instructions,
+        image_url: r.image_url,
+        is_public: r.is_public,
+        author_id: r.author_id,
+        prep_time: r.prep_time,
+        cook_time: r.cook_time,
+        servings: r.servings,
+        nutrition: r.nutrition,
+        tips: r.tips,
+        substitutions: r.substitutions,
+        created_at: r.created_at,
+        updated_at: r.updated_at,
+      })
+    );
 
     return {
       success: true,
@@ -576,6 +571,6 @@ export async function getSavedRecipes() {
     };
   } catch (error) {
     console.error("Error fetching saved recipes:", error);
-    throw new Error(error.message || "Failed to load saved recipes");
+    return { success: false, error: error.message || "Failed to load saved recipes" };
   }
 }

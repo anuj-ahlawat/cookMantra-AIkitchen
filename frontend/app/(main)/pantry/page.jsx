@@ -61,7 +61,9 @@ export default function PantryPage() {
   // Update items when data arrives
   useEffect(() => {
     if (itemsData?.success) {
-      setItems(itemsData.items);
+      setItems(itemsData.items || []);
+    } else if (itemsData?.success === false && itemsData?.error) {
+      toast.error(itemsData.error);
     }
   }, [itemsData]);
 
@@ -70,8 +72,10 @@ export default function PantryPage() {
     if (deleteData?.success && !deleting) {
       toast.success("Item removed from pantry");
       fetchItems();
+    } else if (deleteData?.success === false && deleteData?.error) {
+      toast.error(deleteData.error);
     }
-  }, [deleteData]);
+  }, [deleteData, deleting]);
 
   // Refresh after update
   useEffect(() => {
@@ -79,6 +83,8 @@ export default function PantryPage() {
       toast.success("Item updated successfully");
       setEditingId(null);
       fetchItems();
+    } else if (updateData?.success === false && updateData?.error) {
+      toast.error(updateData.error);
     }
   }, [updateData]);
 
@@ -91,7 +97,7 @@ export default function PantryPage() {
 
   // Start editing
   const startEdit = (item) => {
-    setEditingId(item.documentId);
+    setEditingId(item.id);
     setEditValues({
       name: item.name,
       quantity: item.quantity,
@@ -230,10 +236,10 @@ export default function PantryPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {items.map((item) => (
                 <div
-                  key={item.documentId}
+                  key={item.id}
                   className="bg-[var(--beige-light)] p-5 border-2 border-[var(--border)] hover:border-[var(--green)]/50 hover:shadow-lg transition-all rounded-xl"
                 >
-                  {editingId === item.documentId ? (
+                  {editingId === item.id ? (
                     <div className="space-y-3">
                       <input
                         type="text"
@@ -300,7 +306,7 @@ export default function PantryPage() {
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(item.documentId)}
+                            onClick={() => handleDelete(item.id)}
                             disabled={deleting}
                             className="p-2 border-2 border-transparent hover:border-red-600 hover:bg-red-50 transition-all text-[var(--green-muted)] hover:text-red-600"
                           >

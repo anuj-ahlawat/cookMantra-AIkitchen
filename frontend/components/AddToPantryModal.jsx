@@ -63,11 +63,13 @@ export default function AddToPantryModal({ isOpen, onClose, onSuccess }) {
     await scanImage(formData);
   };
 
-  // Update scanned ingredients when scan completes
+  // Update scanned ingredients when scan completes / show error
   useEffect(() => {
     if (scanData?.success && scanData?.ingredients) {
       setScannedIngredients(scanData.ingredients);
       toast.success(`Found ${scanData.ingredients.length} ingredients!`);
+    } else if (scanData?.success === false && scanData?.error) {
+      toast.error(scanData.error);
     }
   }, [scanData]);
 
@@ -92,36 +94,40 @@ export default function AddToPantryModal({ isOpen, onClose, onSuccess }) {
     onClose();
   };
 
-  // Handle save success
+  // Handle save success / error
   useEffect(() => {
     if (saveData?.success) {
       toast.success(saveData.message);
       handleClose();
       if (onSuccess) onSuccess();
+    } else if (saveData?.success === false && saveData?.error) {
+      toast.error(saveData.error);
     }
   }, [saveData]);
 
-  // Handle manual add
+  // Handle manual add (name required, quantity optional)
   const handleAddManual = async (e) => {
     e.preventDefault();
-    if (!manualItem.name.trim() || !manualItem.quantity.trim()) {
-      toast.error("Please fill in all fields");
+    if (!manualItem.name?.trim()) {
+      toast.error("Please enter an ingredient name");
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", manualItem.name);
-    formData.append("quantity", manualItem.quantity);
+    formData.append("name", manualItem.name.trim());
+    formData.append("quantity", manualItem.quantity?.trim() ?? "");
     await addManualItem(formData);
   };
 
-  // Handle manual add success
+  // Handle manual add success / error
   useEffect(() => {
     if (addData?.success) {
       toast.success("Item added to pantry!");
       setManualItem({ name: "", quantity: "" });
       handleClose();
       if (onSuccess) onSuccess();
+    } else if (addData?.success === false && addData?.error) {
+      toast.error(addData.error);
     }
   }, [addData]);
 

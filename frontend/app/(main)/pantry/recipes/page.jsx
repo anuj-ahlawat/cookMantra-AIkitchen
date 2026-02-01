@@ -17,6 +17,7 @@ import useFetch from "@/hooks/use-fetch";
 import { getRecipesByPantryIngredients } from "@/actions/recipe.actions";
 import RecipeCard from "@/components/RecipeCard";
 import PricingModal from "@/components/PricingModal";
+import { toast } from "sonner";
 
 export default function PantryRecipesPage() {
   const {
@@ -25,12 +26,15 @@ export default function PantryRecipesPage() {
     fn: fetchSuggestions,
   } = useFetch(getRecipesByPantryIngredients);
 
-  console.log(recipesData);
-
-  // Load suggestions on mount
   useEffect(() => {
     fetchSuggestions();
   }, []);
+
+  useEffect(() => {
+    if (recipesData?.success === false && recipesData?.error) {
+      toast.error(recipesData.error);
+    }
+  }, [recipesData]);
 
   const recipes = recipesData?.recipes || [];
   const ingredientsUsed = recipesData?.ingredientsUsed || "";

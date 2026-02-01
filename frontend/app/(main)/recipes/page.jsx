@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import useFetch from "@/hooks/use-fetch";
 import { getSavedRecipes } from "@/actions/recipe.actions";
 import RecipeCard from "@/components/RecipeCard";
+import { toast } from "sonner";
 
 export default function SavedRecipesPage() {
   const {
@@ -18,6 +19,12 @@ export default function SavedRecipesPage() {
   useEffect(() => {
     fetchSavedRecipes();
   }, []);
+
+  useEffect(() => {
+    if (recipesData?.success === false && recipesData?.error) {
+      toast.error(recipesData.error);
+    }
+  }, [recipesData]);
 
   const recipes = recipesData?.recipes || [];
 
@@ -47,7 +54,7 @@ export default function SavedRecipesPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {recipes.map((recipe) => (
               <RecipeCard
-                key={recipe.documentId}
+                key={recipe.id}
                 recipe={recipe}
                 variant="list"
               />

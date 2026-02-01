@@ -89,7 +89,7 @@ function RecipeContent() {
     }
   }, [recipeData]);
 
-  // Handle save success
+  // Handle save success / error
   useEffect(() => {
     if (saveData?.success) {
       if (saveData.alreadySaved) {
@@ -98,14 +98,18 @@ function RecipeContent() {
         setIsSaved(true);
         toast.success("Recipe saved to your collection!");
       }
+    } else if (saveData?.success === false && saveData?.error) {
+      toast.error(saveData.error);
     }
   }, [saveData]);
 
-  // Handle remove success
+  // Handle remove success / error
   useEffect(() => {
     if (removeData?.success) {
       setIsSaved(false);
       toast.success("Recipe removed from collection");
+    } else if (removeData?.success === false && removeData?.error) {
+      toast.error(removeData.error);
     }
   }, [removeData]);
 
